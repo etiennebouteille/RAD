@@ -1,6 +1,7 @@
 import pandas as pd
+import time
 
-time = 0
+oldtime = time.time() 
 
 homeinfo = pd.read_csv('rad-data.csv')
 print(homeinfo)
@@ -9,20 +10,32 @@ print(homeinfo)
 temperature = homeinfo['temperature'].values[0]
 thermostat = homeinfo['thermostat'].values[0]
 
+radiatorOn = False
+
 def getTemperature():
     #TODO: use temperature sensor
-    homeinfo.set_value(0, 'temperature', 10) #replace temperature in the first line of file with measured temp
-    return 10
+    homeinfo.at[0, 'temperature'] = temperature #replace temperature in the first line of file with measured temp
+    return temperature 
 
 def setRadiatorPower():
     if temperature < thermostat :
-        radiatorOn = True
+        return True
     if temperature >= thermostat :
-        radiatorOn = False
+        return False
+
+def changeTemp(temp):
+    if radiatorOn:
+        temp += 1
+        return temp
+    else:
+        return temp
 
 while True:
     getTemperature()
-    setRadiatorPower()
-    print('thermostat = %s, temperature = %s' % (thermostat, temperature))
-    time += 1
+    radiatorOn = setRadiatorPower()
+
+    if time.time() - oldtime > 3 :
+        temperature = changeTemp(temperature)
+        oldtime = time.time()
+        print(homeinfo)
 
