@@ -8,6 +8,7 @@ import time
 oldtime = time.time() 
 
 homeinfo = pd.read_csv('rad-data.csv')
+homelogs = pd.DataFrame(columns=['Time', 'Temperature', 'Humidity'])
 print(homeinfo)
 
 #set variables to the first line of data in the file
@@ -33,6 +34,10 @@ def setRadiatorPower():
         return True
     if temperature >= thermostat :
         return False
+
+def writeLogs():
+
+
 
 while True:
     temperature = getTemperature()
