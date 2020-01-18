@@ -17,14 +17,16 @@ thermostat = homeinfo['thermostat'].values[0]
 radiatorOn = False
 
 def getTemperature():
-    #TODO: use temperature sensor
-    humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
-    if humidity is not None and temperature is not None:
-        print("Temp={0:0.1f}*C  Humidity={1:0.1f}%".format(temperature, humidity))
+    sensorHumidity, sensorTemp = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
+    if sensorHumidity is not None and sensorTemp is not None:
+        print("Temp={0:0.1f}*C  Humidity={1:0.1f}%".format(sensorTemp, sensorHumidity))
     else:
         print("Failed to retrieve data from humidity sensor")
+
     homeinfo.at[0, 'temperature'] = temperature #replace temperature in the first line of file with measured temp
-    return temperature 
+    homeinfo.to_csv('rad-data.csv', index=False)
+
+    return sensorTemp 
 
 def setRadiatorPower():
     if temperature < thermostat :
@@ -32,20 +34,8 @@ def setRadiatorPower():
     if temperature >= thermostat :
         return False
 
-def changeTemp(temp):
-    if radiatorOn:
-        temp += 1
-        return temp
-    else:
-        return temp
-
 while True:
     temperature = getTemperature()
     print("temperature = " + str(temperature))
     radiatorOn = setRadiatorPower()
     print(radiatorOn)
-    #if time.time() - oldtime > 3 :
-    #    temperature = changeTemp(temperature)
-    #    oldtime = time.time()
-    #    print(homeinfo)
-
