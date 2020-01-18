@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 RADIATOR_PIN = 16
 GPIO.setup(RADIATOR_PIN, GPIO.OUT)
+GPIO.output(RADIATOR_PIN, 0)
 
 import pandas as pd
 import time
