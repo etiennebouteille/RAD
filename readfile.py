@@ -2,6 +2,11 @@ import Adafruit_DHT
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4
 
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+RADIATOR_PIN = 16
+GPIO.setup(RADIATOR_PIN, GPIO.OUT)
+
 import pandas as pd
 import time
 
@@ -31,8 +36,10 @@ def getTemperature():
 
 def setRadiatorPower():
     if temperature < thermostat :
+        GPIO.output(RADIATOR_PIN, 1)
         return True
     if temperature >= thermostat :
+        GPIO.output(RADIATOR_PIN, 0)
         return False
 
 def writeLogs():
