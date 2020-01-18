@@ -36,11 +36,16 @@ def setRadiatorPower():
         return False
 
 def writeLogs():
+    homelogs.at[0, 'Time'] = time.time()
+    homelogs.at[0, 'Temperature'] = temperature
+    homelogs.at[0, 'Humidity'] = humidity
 
-
+    with open('rad-logs.csv', 'a') as f:
+        pd.to_csv(homelogs, header=False)
 
 while True:
     temperature = getTemperature()
     print("temperature = " + str(temperature))
     radiatorOn = setRadiatorPower()
     print(radiatorOn)
+    writeLogs()
