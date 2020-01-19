@@ -20,6 +20,7 @@ print(homeinfo)
 #set variables to the first line of data in the file
 temperature = homeinfo['temperature'].values[0]
 thermostat = homeinfo['thermostat'].values[0]
+humidity = 0
 
 radiatorOn = False
 
@@ -33,7 +34,7 @@ def getTemperature():
     homeinfo.at[0, 'temperature'] = temperature #replace temperature in the first line of file with measured temp
     homeinfo.to_csv('rad-data.csv', index=False)
 
-    return sensorTemp 
+    return sensorTemp, sensorHumidity 
 
 def setRadiatorPower():
     if temperature < thermostat :
@@ -49,11 +50,12 @@ def writeLogs():
     homelogs.at[0, 'Humidity'] = humidity
 
     with open('rad-logs.csv', 'a') as f:
-        pd.to_csv(homelogs, header=False)
+        homelogs.to_csv(homelogs, header=False)
 
 while True:
-    temperature = getTemperature()
+    temperature, humidity = getTemperature()
+    print("humidity = " + str(humidity))
     print("temperature = " + str(temperature))
     radiatorOn = setRadiatorPower()
     print(radiatorOn)
-    writeLogs()
+    #writeLogs()
