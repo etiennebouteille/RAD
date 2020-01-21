@@ -10,6 +10,7 @@ GPIO.output(RADIATOR_PIN, 0)
 
 import pandas as pd
 import time
+import datetime
 
 oldtime = time.time() 
 
@@ -34,7 +35,7 @@ def getTemperature():
     homeinfo.at[0, 'temperature'] = temperature #replace temperature in the first line of file with measured temp
     homeinfo.to_csv('rad-data.csv', index=False)
 
-    return sensorTemp, sensorHumidity 
+    return sensorTemp, sensorHumidity;
 
 def setRadiatorPower():
     if temperature < thermostat :
@@ -45,12 +46,13 @@ def setRadiatorPower():
         return False
 
 def writeLogs():
-    homelogs.at[0, 'Time'] = time.time()
+    now = datetime.datetime.now()
+    homelogs.at[0, 'Time'] = str(now)
     homelogs.at[0, 'Temperature'] = temperature
     homelogs.at[0, 'Humidity'] = humidity
 
     with open('rad-logs.csv', 'a') as f:
-        homelogs.to_csv(homelogs, header=False)
+        homelogs.to_csv(f, header=False)
 
 while True:
     temperature, humidity = getTemperature()
@@ -58,4 +60,4 @@ while True:
     print("temperature = " + str(temperature))
     radiatorOn = setRadiatorPower()
     print(radiatorOn)
-    #writeLogs()
+    writeLogs()
