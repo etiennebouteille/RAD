@@ -30,7 +30,7 @@ while True :
                 print("Ca chauffe plus!!")
             else:
                 renvoi = subprocess.check_output("./hilink.sh send_sms \'" + sender + "\' \'Rien compris mon pote\'", shell=True) 
-                print("Rien compris mon pote")
+                ##print("Rien compris mon pote")
 
             oldmessage = msgcontent
     time.sleep(2)
